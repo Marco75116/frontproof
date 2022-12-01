@@ -18,7 +18,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
-// import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
