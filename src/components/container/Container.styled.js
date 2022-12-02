@@ -8,12 +8,44 @@ export const ContainerCONTAINER = styled.div`
   height: 100vh;
 `;
 
+export const ShowModalButton = styled.button`
+  background-color: #fff;
+  box-shadow: rgb(69 67 96 / 10%) 0px 5px 20px 0px;
+  border: 20px;
+  border-radius: 10px;
+  font-size: medium;
+  cursor: pointer;
+  position: absolute;
+  top: 3rem;
+  left: 3rem;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalWrapper = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+export const ModalBody = styled.div`
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-20rem, -50%);
+  width: auto;
+`;
+
 export const ContainerParameters = styled.div`
   display: flex;
   flex-direction: column;
   background-color: white;
   border-radius: 20px;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   box-shadow: rgb(69 67 96 / 10%) 0px 5px 20px 0px;
   width: 530px;
 `;
@@ -72,7 +104,7 @@ export const ContainerContent = styled.div`
   display: ${(props) => props.display};
   background-color: white;
   border-radius: 20px;
-  padding: 1.875rem;
+  padding: 1.275rem;
   box-shadow: rgb(69 67 96 / 10%) 0px 5px 20px 0px;
   width: 530px;
   box-sizing: border-box;
@@ -117,6 +149,7 @@ export const Button = styled.button`
 export const PieContainer = styled.div`
   display: flex;
   justify-content: center;
+  height: 50vh;
 `;
 
 export const FooterContainer = styled.div`

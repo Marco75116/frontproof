@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   ContainerCONTAINER,
   ContainerContent,
@@ -13,11 +13,15 @@ import {
   CurrentParametersContainer,
   ContainerParameters,
   Parameter,
+  ModalWrapper,
+  ModalBody,
+  ShowModalButton,
 } from "./Container.styled";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
+import srcScreen from "../../asset/Capture d’écran 2022-12-01 à 05.01.37.png";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -34,6 +38,9 @@ const Container = () => {
   const [parameters, setParameters] = useState(defaultParameters);
   const [currentParameters, setCurrentParameters] = useState(defaultParameters);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const ref = useRef(null);
 
   const query = (parameters) => {
     axios({
@@ -43,10 +50,15 @@ const Container = () => {
         "Content-Type": "application/json",
       },
       params: parameters,
-    }).then((res) => {
-      setAllData(res.data);
-      setLoading(false);
-    });
+    })
+      .then((res) => {
+        setAllData(res.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setError(true);
+      });
   };
 
   const data = {
@@ -70,8 +82,41 @@ const Container = () => {
     ],
   };
 
+  const handleClickOutside = (event) => {
+    if (ref.current && !ref.current.contains(event.target)) {
+      setShowModal(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+
   return (
     <ContainerCONTAINER>
+      <ShowModalButton
+        onClick={() => {
+          setShowModal((prev) => !prev);
+        }}
+      >
+        <span style={{ padding: "5px" }}>Display Algorithme </span>
+        <span class="icon-eye"></span>
+      </ShowModalButton>
+
+      {showModal && (
+        <ModalWrapper>
+          <ModalBody>
+            <img
+              ref={ref}
+              style={{ heigh: "40rem", width: "40rem" }}
+              src={srcScreen}
+            ></img>
+          </ModalBody>
+        </ModalWrapper>
+      )}
       <ContainerParameters>
         <InputContainer>
           <VariableInput
@@ -109,6 +154,7 @@ const Container = () => {
               setCurrentStep(0);
               setParameters(defaultParameters);
               setLoading(true);
+              setError(false);
             }}
           >
             SEND
@@ -124,7 +170,18 @@ const Container = () => {
         )}
       </ContainerParameters>
 
-      <ContainerContent display={allData[0][0] === 0 ? "none" : ""}>
+      {error && (
+        <ContainerContent>
+          <span>Error set parameters again</span>
+          {currentParameters.nbNodes > 100000 && (
+            <span>, with 100 000 nodes maximum.</span>
+          )}
+        </ContainerContent>
+      )}
+
+      <ContainerContent
+        display={allData[0][0] === 0 || error === true ? "none" : ""}
+      >
         <HeaderContainer>
           <Button
             onClick={() => {
